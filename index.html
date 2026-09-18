@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      viewport-fit=cover 让全面屏手机可以使用刘海/灵动岛周围区域；
+      禁止页面缩放是为了避免拖卡牌时浏览器把手势误识别成网页缩放。
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>临阵讨贼</title>
+    <meta name="game-id" content="linzhen-taozei-v1" />
+    <meta name="theme-color" content="#091421" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="临阵讨贼" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/icons/app-icon-192.png" />
+    <style>
+      /* 页面只负责把游戏画布居中，游戏内界面由 Phaser 绘制。 */
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+        margin: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
+        background: #090d1c;
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      body {
+        /* Phaser已经计算画布居中边距，不再额外用flex重复居中。 */
+        height: 100dvh;
+        background: radial-gradient(ellipse at center, #1d3440 0%, #090f19 70%);
+        box-sizing: border-box;
+        /* 给全面屏手机的刘海、圆角和底部手势条留出安全区域。 */
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+          env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
+
+      #game-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        touch-action: none;
+      }
+
+      canvas {
+        display: block;
+        touch-action: none;
+        box-shadow: 0 0 40px rgba(37, 58, 116, 0.45);
+      }
+
+      /* 横屏手机会导致竖屏战场过窄，因此提示玩家转回竖屏。 */
+      #orientation-warning {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        color: #f6dfa7;
+        background: radial-gradient(circle at center, #233b47 0%, #07101b 72%);
+        text-align: center;
+        letter-spacing: 2px;
+      }
+
+      #orientation-warning .phone-icon {
+        width: 42px;
+        height: 70px;
+        border: 3px solid #d9b56d;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(217, 181, 109, 0.25);
+      }
+
+      #orientation-warning small {
+        color: #aebed0;
+        letter-spacing: 0;
+      }
+
+      @media (orientation: landscape) and (max-height: 600px) {
+        #orientation-warning { display: flex; }
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index-DUsRaA2-.js"></script>
+  </head>
+  <body>
+    <div id="game-container"></div>
+    <div id="orientation-warning" aria-live="polite">
+      <div class="phone-icon" aria-hidden="true"></div>
+      <strong>请转动手机，使用竖屏游玩</strong>
+      <small>竖屏能完整显示战场与武将卡牌</small>
+    </div>
+
+    <!-- Phaser随项目打包，运行时无需从外网下载引擎。 -->
+  </body>
+</html>
