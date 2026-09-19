@@ -1,40 +1,44 @@
-# 资源组织
+# 浏览器正式资源目录
 
-当前战场、武将、随从、建筑、主菜单和远程特效均已接入正式图片；范围提示及次要粒子由Phaser高性能共享绘图层生成，音乐音效由AudioService实时合成。
+这里保存游戏运行时直接加载的压缩素材。高清源稿放在项目根目录 `art_sources/`，不会进入网页构建包。
 
-正式素材按以下位置存放：
+## 图片分类
 
-- images/units/generals、images/units/escorts、images/buildings：武将、士兵和建筑。
-- images/battlefield、images/ui、images/effects：地图、卡牌界面、需要使用图片的技能特效。
-- audio/bgm、audio/sfx：循环配乐和短音效。
-- data/levels、data/config：扩展关卡与资源清单。
+| 目录 | 内容 | 配置入口 |
+| --- | --- | --- |
+| `images/battlefield/` | 五丈原、箕谷、陈仓、荆州、夷陵、赤壁等地图 | `BattleVisualData.js`、`CampaignData.js` |
+| `images/buildings/` | 蜀魏箭塔、主城和废墟 | `BattleVisualData.js` |
+| `images/units/generals/` | 26名武将动作图集 | `GeneralSpriteData.js` |
+| `images/units/escorts/` | 8类基础随从动作图集 | `EscortSpriteData.js` |
+| `images/units/beasts/` | 青龙、白虎、朱雀、玄武动作图集 | `BeastData.js` |
+| `images/gameplay/formations/` | 7种阵法的卡面与战场主体图 | `SkillCardData.js` |
+| `images/gameplay/structures/` | 步兵营、弓弩营的卡面与场景图 | `StructureCardData.js` |
+| `images/effects/` | 普攻、技能、箭塔和主城弹道图集 | `EffectSpriteData.js` |
+| `images/story/prologue/` | 序章插画 | `StoryVisualData.js` |
+| `images/story/epilogue/` | 12关战后插画 | `StoryVisualData.js` |
+| `images/story/finale/` | 12幕终章插画 | `StoryVisualData.js` |
+| `images/ui/` | 主菜单、模式页、卡牌头像和界面背景 | 各UI资源数据文件 |
+| `icons/` | PWA与桌面图标 | `manifest.webmanifest` |
 
-武将数值位于src/data/GeneralData.js，阵法牌数值位于src/data/SkillCardData.js，通用规则位于src/config/GameConstants.js；每类数值只保留一份真实来源，不要在资源说明中另建不同步的重复配置。
+## 动作图统一规范
 
-新增素材时同时记录文件来源与可用范围。场景加载资源后，显示层读取图片清单；更换同规格图片不需要修改战斗规则。
+- 26名武将和4只神兽使用4列×4行动作表。
+- 四行从上到下依次为：待机、移动、普通攻击、专属技能。
+- 8类基础随从同样使用4×4动作表，但第四行是受击倒地。
+- 空白区域必须是真实Alpha透明，不能把灰白棋盘格画进图片。
 
-## 已加入的正式武将动作表
+## 卡牌图片
 
-`images/units/generals/`下包含刘备、关羽、张飞、赵云、黄忠、诸葛亮、典韦、夏侯惇8张正式运行图。每张均为1024×1024透明PNG，共4列×4行，每格256×256。
+当前35张卡牌均有独立的图片入口：26张武将头像、7张阵法图和2张营寨图。界面从 `CardPortraitData.js` 统一查询，因此更换图片时不需要修改手牌场景。
 
-四行从上到下依次为：待机、行走、普通攻击、怒气技能；每行从左到右播放。高清生成源图放在项目根目录的`art_sources/generals/`，不会被浏览器加载。完整制作规范和生成提示词见`docs/art-production.md`。
+## 音频说明
 
-## 已加入的兵种、地图和建筑
+背景音乐和大部分短音效由 `AudioService` 通过Web Audio实时合成，可以减小下载体积并避免大量零散音频文件。若以后改用录制音频，应放入 `audio/bgm/` 或 `audio/sfx/`，并继续由 `AudioService` 统一控制音量和并发。
 
-- `images/units/escorts/`：蜀军亲卫、青龙亲卫、虎卫步兵、白马义从、弓箭手、军师卫队、近卫力士、虎豹卫。每张为1024×1024透明PNG，四行依次为待机、行军、攻击、受击倒地。
-- `images/battlefield/wuzhang-plains-night-v3.png`：与规则层双桥位置对齐的五丈原夜战战场；河道更窄、桥更短，南北作战陆地更大。
-- `images/buildings/fortifications-v1.png`：蜀、魏的箭楼、主城及双方废墟，共8帧。
+## 新增资源时必须做什么
 
-这些素材的高清生成源图存放在项目根目录`art_sources/`，完整提示词与替换方法见`docs/art-production.md`。
-
-## 已加入的卡牌图像
-
-`images/ui/cards/`下包含8张武将头像，`images/ui/cards/skills/`包含八卦阵和烈火阵2张阵法卡面，全部为512×512方形PNG。它们在底部手牌中缩放为50×50显示，核心人物或阵法符号仍能辨认。图像统一由`src/data/CardPortraitData.js`对UI导出，高清生成源图位于`art_sources/cards/`。
-
-## 已加入的主菜单与战斗特效
-
-- `images/ui/main-menu/zhugeliang-stargazing-v1.png`：540×960诸葛亮坐木制轮椅车在五丈原观星的竖屏背景。
-- `images/effects/combat-projectiles-v2.png`：1024×1024、真实透明的4×4动作表，四行分别为金色箭矢、紫色弩光、塔楼火弹和火计燃烧。
-- `images/effects/fortification-projectiles-v1.png`：1024×512、真实透明的4×2动作表，上排为箭塔青铜弩矢，下排为主城三缕赤金军令枪。
-
-运行配置分别位于`src/data/UIVisualData.js`和`src/data/EffectSpriteData.js`；高清源图位于`art_sources/ui/`与`art_sources/effects/`。
+1. 把网页真正使用的压缩文件放入本目录的正确分类。
+2. 在 `src/data/` 对应资源表登记 `key` 与相对路径。
+3. 在 `PreloadScene` 中确认该资源会被预加载。
+4. 把可返修高清稿和来源说明放入 `art_sources/`。
+5. 运行 `npm test` 与 `npm run build`，检查路径、尺寸和发布包。
