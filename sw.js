@@ -3,7 +3,8 @@
  * 首次联网打开后，访问过的脚本、图片、音频会自动保存；之后断网也能再次启动。
  */
 // 每次正式大版本都更换缓存名，确保玩家重新打开网址时拿到最新代码和图片。
-const CACHE_NAME = 'linzhen-taozei-v0.5.1';
+// release2用于清理首个v0.5.1公网包缓存，避免旧1024动作图与新128像素分帧规则混用。
+const CACHE_NAME = 'linzhen-taozei-v0.5.1-release2';
 const APP_SHELL = [
   './',
   './index.html',
