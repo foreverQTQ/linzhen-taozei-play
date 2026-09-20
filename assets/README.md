@@ -39,6 +39,12 @@
 
 1. 把网页真正使用的压缩文件放入本目录的正确分类。
 2. 在 `src/data/` 对应资源表登记 `key` 与相对路径。
-3. 在 `PreloadScene` 中确认该资源会被预加载。
+3. 在 `AssetLoadingService` 对应的场景队列中确认资源会按需加载；首屏不要无条件预载大型素材。
 4. 把可返修高清稿和来源说明放入 `art_sources/`。
 5. 运行 `npm test` 与 `npm run build`，检查路径、尺寸和发布包。
+
+## 公网发布图片处理
+
+`public/assets/` 和 `art_sources/` 保存可继续开发的正式素材。执行 `npm run build:publish` 时，
+`scripts/optimize-mobile-build.mjs` 只处理 `dist-publish/` 副本：转换或重压图片、把动作表缩到发布尺寸、
+删除未被程序引用的历史文件，并加入缓存查询标记。不要为了缩小网站而直接覆盖源码中的高清动作表。
